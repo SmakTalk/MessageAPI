@@ -1,0 +1,32 @@
+{
+  "name": "messageapi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "start-dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SmakTalk/MessageAPI.git"
+  },
+  "author": "SmakTalk94",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SmakTalk/MessageAPI/issues"
+  },
+  "homepage": "https://github.com/SmakTalk/MessageAPI#readme",
+  "dependencies": {
+    "body-parser": "^1.20.1",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "firebase": "^9.14.0",
+    "firebase-admin": "^11.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
