@@ -11,22 +11,19 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
-    res.send('Hello world!');
+    res.send('Sending out an SOS...');
 });
 
 app.get('/random', async (req, res) => {
-    const messageRef = db.collection('messages').doc('message');
-    const allMessages = await messageRef.get();
-    const count = Object.keys(allMessages.data()).length;
+    const messagesJson = await getData('messages', 'message');
+    const count = Object.keys(messagesJson).length;
     const random = Math.floor(Math.random() * count);
-    const message = Object.values(allMessages.data())[random];
+    const message = Object.values(messagesJson)[random];
     res.send(message);
 });
 
 app.post('/add', async (req, res) => {
-    const messageRef = db.collection('messages').doc('message');
-    const allMessages = await messageRef.get();
-    const messagesJson = allMessages.data();
+    const messagesJson = await getData('messages', 'message');
     const count = Object.keys(messagesJson).length;
     messagesJson[count] = req.body.message;
     const newMessagesJson = await messageRef.set(messagesJson);
@@ -36,3 +33,9 @@ app.post('/add', async (req, res) => {
 app.listen(port, () => {
     console.log('RESTful API server started on: ' + port);
 });
+
+const getData = async (collectionName, docName) => {
+    const dataRef = db.collection(collectionName).doc(docName);
+    const rawData = await dataRef.get();
+    return rawData.data();
+}
