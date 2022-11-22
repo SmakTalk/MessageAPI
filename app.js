@@ -23,6 +23,16 @@ app.get('/random', async (req, res) => {
     res.send(message);
 });
 
+app.post('/add', async (req, res) => {
+    const messageRef = db.collection('messages').doc('message');
+    const allMessages = await messageRef.get();
+    const messagesJson = allMessages.data();
+    const count = Object.keys(messagesJson).length;
+    messagesJson[count] = req.body.message;
+    const newMessagesJson = await messageRef.set(messagesJson);
+    res.send(newMessagesJson);
+});
+
 app.listen(port, () => {
     console.log('RESTful API server started on: ' + port);
 });
