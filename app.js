@@ -15,27 +15,33 @@ app.get('/', (req, res) => {
 });
 
 app.get('/random', async (req, res) => {
-    const messagesJson = await getData('messages', 'message');
-    const count = Object.keys(messagesJson).length;
+    const messages = await getMessages('messages', 'message');
+    const messagesArr = messages['MessagesArr'];
+    const count = messagesArr.length;
     const random = Math.floor(Math.random() * count);
-    const message = Object.values(messagesJson)[random];
+    const message = messagesArr[random];
     res.send(message);
 });
 
 app.post('/add', async (req, res) => {
-    const messagesJson = await getData('messages', 'message');
-    const count = Object.keys(messagesJson).length;
-    messagesJson[count] = req.body.message;
-    const newMessagesJson = await messageRef.set(messagesJson);
-    res.send(newMessagesJson);
+    const messagesArr = await getMessages('messages', 'message');
+    messagesArr['MessagesArr'].push(req.body.message);
+    const newMessagesArr = await sendMessage('messages', 'message', messagesArr);
+    res.send(newMessagesArr);
 });
 
 app.listen(port, () => {
     console.log('RESTful API server started on: ' + port);
 });
 
-const getData = async (collectionName, docName) => {
+const getMessages = async (collectionName, docName) => {
     const dataRef = db.collection(collectionName).doc(docName);
     const rawData = await dataRef.get();
     return rawData.data();
+}
+
+const sendMessage = async (collectionName, docName, data) => {
+    const dataRef = db.collection(collectionName).doc(docName);
+    const rawData = await dataRef.set(data);
+    return rawData;
 }
